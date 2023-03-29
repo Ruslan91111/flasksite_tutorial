@@ -1,3 +1,6 @@
+"""
+Файл содержит фикстуры, которые каждый тест будет использовать
+"""
 import os
 import tempfile
 
@@ -9,12 +12,18 @@ from ..flasksite.db import get_db, init_db
 with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
     _data_sql = f.read().decode('utf-8')
 
+
+# app fixture вызовет фабрику для конфигурации приложения и БД для тестирования.
 @pytest.fixture
 def app():
+    # tempfile.mkstemp создает и открывает временный файл для создания БД и тестирования
+    # по окончании тестовый файл будет закрыт и удален.
     db_fd, db_path = tempfile.mkstemp()
 
     app = create_app({
+        # TESTING - приложение в тестовом состоянии
         'TESTING': True,
+        # Путь к временной базе, определенной выше
         'DATABASE': db_path,
     })
 
@@ -27,10 +36,14 @@ def app():
     os.close(db_fd)
     os.unlink(db_path)
 
+
+# Фикстура, чтобы формировать запросы к приложению без запуска сервера
 @pytest.fixture
 def client(app):
     return app.test_client()
 
+
+# Фикстура, создает runner (бегуна) для тестирования CLI команд,
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
