@@ -1,5 +1,5 @@
 import pytest
-from ..flask_site.db import get_db
+from ..flasksite.db import get_db
 
 
 def test_index(client, auth):

@@ -6,9 +6,13 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from . db import get_db
 
+
+#  Регистрируем Blueprint(чертеж) под названием auth.
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+# Всем url адресам будет предшествовать префикс '/auth'
 
 
+# view регистрации на сайте.
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -24,6 +28,7 @@ def register():
 
         if error is None:
             try:
+                # ? - placeholder для вводимых юзером значений.
                 db.execute(
                     "INSERT INTO user (username, password) VALUES (?,?)",
                     (username, generate_password_hash(password)),
@@ -33,12 +38,11 @@ def register():
                 error = f"User {username} is already registered."
             else:
                 return redirect(url_for("auth.login"))
-
         flash(error)
-
     return render_template('auth/register.html')
 
 
+# view аутентификации на сайте.
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -57,6 +61,8 @@ def login():
 
         if error is None:
             session.clear()
+
+            # Если пользователь и пароль соответствуют - сохранить id пользователя в сессию
             session['user_id'] = user['id']
             return redirect(url_for('index'))
 
@@ -64,6 +70,7 @@ def login():
     return render_template('auth/login.html')
 
 
+# View для авторизованного пользователя
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
@@ -82,6 +89,7 @@ def logout():
     return redirect(url_for('index'))
 
 
+# Декоратор для проверки, авторизованный ли пользователь манипулирует с постами.
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
