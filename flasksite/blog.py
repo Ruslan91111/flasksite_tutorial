@@ -1,3 +1,6 @@
+"""Blueprint - blog
+содержит представления по созданию, редактированию и удалению постов."""
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -6,8 +9,11 @@ from werkzeug.exceptions import abort
 from . auth import login_required
 from . db import get_db
 
+# Создание экземпляра Blueprint с именем 'blog'
 bp = Blueprint('blog', __name__)
 
+
+# Домашняя страница, отображает статьи из базы данных.
 @bp.route('/')
 def index():
     db = get_db()
@@ -19,6 +25,7 @@ def index():
     return render_template('blog/index.html', posts=posts)
 
 
+# Создать пост в БД.
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
@@ -34,6 +41,7 @@ def create():
             flash(error)
         else:
             db = get_db()
+            # Добавить запись в БД
             db.execute(
                 'INSERT INTO post(title, body, author_id)'
                 'VALUES (?,?,?)',
@@ -43,6 +51,8 @@ def create():
             return redirect(url_for('blog.index'))
     return render_template('blog/create.html')
 
+
+# Отображение одного поста.
 def get_post(id, check_author=True):
     post = get_db().execute(
         'SELECT p.id, title, body, created, author_id, username'
@@ -59,6 +69,8 @@ def get_post(id, check_author=True):
 
     return post
 
+
+# Обновить пост
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
@@ -86,6 +98,7 @@ def update(id):
     return render_template('blog/update.html', post=post)
 
 
+# Удалить пост
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
