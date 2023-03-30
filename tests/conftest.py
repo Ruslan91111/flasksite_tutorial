@@ -5,7 +5,8 @@ import tempfile
 
 import pytest
 
-from ..flasksite import create_app
+
+from flasksite import create_app
 from ..flasksite.db import get_db, init_db
 
 with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
@@ -28,6 +29,7 @@ def app():
         'DATABASE': db_path,
     })
 
+    # Контекстный менеджер, который гарантирует, что соединение с тестовой БД будет закрыто
     with app.app_context():
         init_db()
         get_db().executescript(_data_sql)
