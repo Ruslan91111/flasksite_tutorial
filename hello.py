@@ -5,6 +5,8 @@ from flask import Flask, url_for
 app = Flask(__name__)
 
 
+# @app.route - декоратор маршрут для view
+# methods=[перечень видов запросов, которые могут использоваться]
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return 'Index Page'

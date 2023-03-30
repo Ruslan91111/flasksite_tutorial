@@ -10,6 +10,7 @@ from flask import Flask
 from . import db, blog
 from . import auth
 
+
 # Фабричная функция по созданию приложений.
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -47,9 +48,6 @@ def create_app(test_config=None):
     app.register_blueprint(blog.bp)
     # Blueprint blog не имеет префикса, поэтому index view будет на '/'
     app.add_url_rule('/', endpoint='index')
-
-
-
 
     return app
 

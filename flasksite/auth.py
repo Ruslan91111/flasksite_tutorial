@@ -1,3 +1,5 @@
+"""Содержит Blueprint с views: login, logout, register. Также содержит декоратор - проверяющий авторизованный
+ли пользователь совершает определенные действия."""
 import functools
 
 from flask import (

@@ -1,5 +1,4 @@
-"""Blueprint - blog
-содержит представления по созданию, редактированию и удалению постов."""
+"""Blueprint - blog содержит представления по созданию, редактированию и удалению постов."""
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
