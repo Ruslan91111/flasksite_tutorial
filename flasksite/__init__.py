@@ -10,8 +10,10 @@ from flask import Flask
 from . import db, blog
 from . import auth
 
-# Фабричная функция по созданию приложений.
+
+# Фабричная функция по созданию приложений и базы данных к нему.
 def create_app(test_config=None):
+    # Создаем экземпляр фласка с именем из директории
     app = Flask(__name__, instance_relative_config=True)
     # Конфигурация, которую приложение будет использовать по умолчанию, если не передать других настроек.
     app.config.from_mapping(
@@ -19,6 +21,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'flasksite.sqlite'),
     )
 
+    # Проверка переданы ли конфиги или нет.
     if test_config is None:
         # Если есть конфигурация в файле config.py взять настройки оттуда.
         app.config.from_pyfile('config.py', silent=True)
@@ -47,9 +50,6 @@ def create_app(test_config=None):
     app.register_blueprint(blog.bp)
     # Blueprint blog не имеет префикса, поэтому index view будет на '/'
     app.add_url_rule('/', endpoint='index')
-
-
-
 
     return app
 

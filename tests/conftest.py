@@ -1,3 +1,5 @@
+"""Содержит тестовую конфигурацию, то что понадобится перед каждым тестом."""
+
 import os
 import tempfile
 
@@ -9,6 +11,9 @@ from ..flasksite.db import get_db, init_db
 with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
     _data_sql = f.read().decode('utf-8')
 
+
+# Фикстура app вызовет фабрику из __init__.py, которая создаст(сконфигурирует) приложение
+# и тестовую БД, чтобы не обращаться к БД приложения.
 @pytest.fixture
 def app():
     db_fd, db_path = tempfile.mkstemp()
